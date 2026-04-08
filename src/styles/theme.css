@@ -1,0 +1,26 @@
+:root {
+  --primary: #0077b6;
+  --accent: #48cae4;
+  --success: #2ecc71;
+  --danger: #e63946;
+
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.22);
+  --glass-shadow: 0 12px 32px rgba(2, 62, 138, 0.28);
+
+  --text: rgba(248, 251, 255, 0.98);
+  --muted: rgba(240, 248, 255, 0.85);
+
+  --radius-lg: 16px;
+  --radius-md: 12px;
+}
+
+body {
+  background: radial-gradient(ellipse at bottom, var(--accent), #023e8a);
+  color: var(--text);
+  font-family: Inter, Poppins, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
