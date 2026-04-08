@@ -2,10 +2,12 @@ package com.mindx.serviceai.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
@@ -17,8 +19,11 @@ public class JwtUtil {
     @Value("${jwt.expiration}")
     private Long expiration;
 
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(secret.getBytes());
+    private Key signingKey;
+
+    @PostConstruct
+    private void init() {
+        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateToken(String username, String role) {
@@ -27,7 +32,7 @@ public class JwtUtil {
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .signWith(signingKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
@@ -43,14 +48,14 @@ public class JwtUtil {
         try {
             getClaims(token);
             return true;
-        } catch (Exception e) {
+        } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
 
     private Claims getClaims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+                .setSigningKey(signingKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
