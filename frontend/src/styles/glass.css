@@ -1,0 +1,115 @@
+/* Shared glassmorphism primitives for the whole app */
+
+.app-bg {
+  background: radial-gradient(ellipse at bottom, var(--accent), #023e8a);
+  min-height: 100vh;
+}
+
+.glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-header {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--glass-shadow);
+}
+
+.glass-button {
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: rgba(0, 119, 182, 0.55);
+  color: #fff;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: transform 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+}
+
+.glass-button:hover {
+  transform: translateY(-1px);
+}
+
+.glass-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.glass-button-secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+}
+
+.glass-input {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  outline: none;
+}
+
+.glass-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.text-muted {
+  color: var(--muted);
+}
+
+/* Chat */
+.chat-bubble {
+  max-width: 70%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+}
+
+.chat-bubble-user {
+  background: rgba(2, 62, 138, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
+.chat-bubble-ai {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #f1fbff;
+}
+
+.chat-bubble-system {
+  background: rgba(255, 247, 237, 0.35);
+  border: 1px solid rgba(254, 215, 170, 0.55);
+  color: #c2410c;
+}
+
+.chat-bubble-admin {
+  background: rgba(72, 202, 228, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
