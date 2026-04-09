@@ -166,7 +166,9 @@ public class TicketService {
         messageRepository.save(userMessage);
         publishMessageToWebSocket(ticket, userMessage);
 
-        Optional<Long> maybeOrderId = extractAnyNumericValue(messageText);
+        // Prefer an explicit "order id/number" reference; otherwise fall back to last number in message.
+        Optional<Long> maybeOrderId = extractOrderIdFromUserText(messageText)
+                .or(() -> extractAnyNumericValue(messageText));
         String normalized = normalize(messageText);
         List<Message> conversationHistory = messageRepository.findByTicketIdOrderByTimestampAsc(ticketId);
         boolean cancelPending = isAwaitingCancellationOrderId(conversationHistory);
@@ -208,12 +210,11 @@ public class TicketService {
                 return buildMessageResponse(ticket, userMessage,
                         "Sorry, I couldn't find any order with ID #" + orderIdToCancel.get() + ". Please check and try again. A human agent has been alerted.");
             }
-            if (isYetToBeShipped(maybeOrder.get())) {
-                return buildMessageResponse(ticket, userMessage,
-                        "Your order (#" + maybeOrder.get().getId() + ") has been successfully cancelled. I've alerted a human agent.");
-            }
+            Order order = maybeOrder.get();
+            order.setStatus("CANCELLED");
+            orderRepository.save(order);
             return buildMessageResponse(ticket, userMessage,
-                    "Sorry, your order cannot be cancelled as it is already shipped. A human agent has been alerted.");
+                    "Your order (#" + order.getId() + ") has been cancelled. I've alerted a human agent.");
         }
 
         // Fast-track delivery flow (keyword OR pending fast-track)
@@ -236,7 +237,7 @@ public class TicketService {
                         "Your order has been upgraded to priority delivery. I've alerted a human agent.");
             }
             return buildMessageResponse(ticket, userMessage,
-                    "Your order is already in progress and cannot be fast-tracked. A human agent has been alerted.");
+                    "Your order is already shipped. We will check the status and come back to you. A human agent has been alerted.");
         }
 
         // Build AI response messages
@@ -325,10 +326,15 @@ public class TicketService {
             return Optional.empty();
         }
         Matcher matcher = ANY_NUMBER_PATTERN.matcher(text);
-        if (!matcher.find()) {
-            return Optional.empty();
+        Long last = null;
+        while (matcher.find()) {
+            try {
+                last = Long.parseLong(matcher.group());
+            } catch (NumberFormatException ignored) {
+                // ignore
+            }
         }
-        return Optional.of(Long.parseLong(matcher.group()));
+        return Optional.ofNullable(last);
     }
     public Map<String, Long> getTicketStats() {
         ensureCurrentUserIsAdmin();
@@ -690,6 +696,7 @@ public class TicketService {
             case "SHIPPED" -> "Shipped";
             case "OUT_FOR_DELIVERY" -> "Out for delivery";
             case "YET_TO_BE_SHIPPED" -> "Yet to be shipped";
+            case "CANCELLED" -> "Cancelled";
             default -> status;
         };
     }
