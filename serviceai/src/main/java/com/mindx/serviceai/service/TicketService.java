@@ -696,6 +696,8 @@ public class TicketService {
             case "SHIPPED" -> "Shipped";
             case "OUT_FOR_DELIVERY" -> "Out for delivery";
             case "YET_TO_BE_SHIPPED" -> "Yet to be shipped";
+            case "DELIVERED" -> "Delivered";
+            case "DELIVERED_SUCCESSFULLY" -> "Delivered";
             case "CANCELLED" -> "Cancelled";
             default -> status;
         };
