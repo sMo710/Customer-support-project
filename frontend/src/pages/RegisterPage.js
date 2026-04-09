@@ -8,7 +8,6 @@ const RegisterPage = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [role, setRole] = useState('CUSTOMER');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const [loading, setLoading] = useState(false);
@@ -57,7 +56,7 @@ const RegisterPage = () => {
         setLoading(true);
         setError('');
         try {
-            await register(username.trim(), password, role);
+            await register(username.trim(), password, 'CUSTOMER');
             setSuccess('Account created! Redirecting to login...');
             setTimeout(() => navigate('/login'), 2000);
         } catch (err) {
@@ -145,39 +144,6 @@ const RegisterPage = () => {
                     </div>
                     <div style={{ ...styles.passwordRuleItem, color: password && confirmPassword && password === confirmPassword ? '#7CFC9A' : 'rgba(255,255,255,0.7)' }}>
                         {password && confirmPassword && password === confirmPassword ? '✓' : '•'} Passwords must match
-                    </div>
-                </div>
-
-                {/* Role Selector */}
-                <div style={styles.formGroup}>
-                    <div style={styles.label}>Account Type</div>
-                    <div style={styles.roleSelector}>
-                        <div
-                            style={{
-                                ...styles.roleOption,
-                                ...(role === 'CUSTOMER' ? styles.roleOptionActive : {}),
-                            }}
-                            onClick={() => setRole('CUSTOMER')}
-                        >
-                            <div style={styles.roleIconCircle}>👤</div>
-                            <div>
-                                <div style={styles.roleTitle}>Customer</div>
-                                <div style={styles.roleDesc}>Get AI support</div>
-                            </div>
-                        </div>
-                        <div
-                            style={{
-                                ...styles.roleOption,
-                                ...(role === 'ADMIN' ? styles.roleOptionActive : {}),
-                            }}
-                            onClick={() => setRole('ADMIN')}
-                        >
-                            <div style={styles.roleIconCircle}>🛡️</div>
-                            <div>
-                                <div style={styles.roleTitle}>Admin</div>
-                                <div style={styles.roleDesc}>Manage tickets</div>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -317,39 +283,6 @@ const styles = {
         fontWeight: '500',
         color: 'rgba(255,255,255,0.9)',
         marginBottom: '8px',
-    },
-    roleSelector: {
-        display: 'flex',
-        gap: '12px',
-    },
-    roleOption: {
-        flex: 1,
-        padding: '14px',
-        border: '1px solid rgba(255,255,255,0.25)',
-        borderRadius: '12px',
-        cursor: 'pointer',
-        display: 'flex',
-        alignItems: 'center',
-        gap: '10px',
-        background: 'rgba(255,255,255,0.08)',
-        transition: 'all 0.2s',
-    },
-    roleOptionActive: {
-        border: '1px solid rgba(255,255,255,0.8)',
-        background: 'rgba(255,255,255,0.2)',
-    },
-    roleIconCircle: {
-        fontSize: '20px',
-        flexShrink: 0,
-    },
-    roleTitle: {
-        fontSize: '13px',
-        fontWeight: '600',
-        color: 'white',
-    },
-    roleDesc: {
-        fontSize: '11px',
-        color: 'rgba(255,255,255,0.6)',
     },
     primaryBtn: {
         width: '100%',
